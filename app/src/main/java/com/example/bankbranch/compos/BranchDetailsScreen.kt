@@ -56,7 +56,7 @@ fun BranchDetailsScreen(
                 // Branch Type
                 Text(
                     text = branch.type.displayName,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.secondary
                 )
 

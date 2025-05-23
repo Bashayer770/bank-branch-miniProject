@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
@@ -40,6 +42,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun BankBranchApp() {
     val navController = rememberNavController()
+    val selectedBranch = remember { mutableStateOf<Branch?>(null) }
     val branches = listOf(
         Branch(
             id = 1,
@@ -82,7 +85,7 @@ fun BankBranchApp() {
             imageUri = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80"
         )
     )
-
+// NAV SETUP
     NavHost(
         navController = navController,
         startDestination = "branchList"
@@ -90,16 +93,14 @@ fun BankBranchApp() {
         composable("branchList") {
             BranchListScreen(
                 branches = branches,
-                onBranchClick = { branchId ->
-                    navController.navigate("branchDetails/$branchId")
+                onBranchClick = { branch ->
+                    selectedBranch.value = branch
+                    navController.navigate("branchDetails")
                 }
             )
         }
-        composable(
-            "branchDetails/{branchId}",
-        ) { backStackEntry ->
-            val branchId = backStackEntry.arguments?.getInt("branchId")
-            val branch = branches.find { it.id == branchId }
+        composable("branchDetails") {
+            val branch = selectedBranch.value
             if (branch != null) {
                 BranchDetailsScreen(
                     branch = branch,
@@ -113,7 +114,7 @@ fun BankBranchApp() {
 @Composable
 fun BranchListScreen(
     branches: List<Branch>,
-    onBranchClick: (Int) -> Unit
+    onBranchClick: (Branch) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -123,7 +124,7 @@ fun BranchListScreen(
         items(branches) { branch ->
             BranchCard(
                 branch = branch,
-                modifier = Modifier.clickable { onBranchClick(branch.id) }
+                modifier = Modifier.clickable { onBranchClick(branch) }
             )
         }
     }

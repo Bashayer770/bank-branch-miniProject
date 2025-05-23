@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -18,54 +19,60 @@ fun BranchCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            .padding(vertical = 16.dp),
+        colors = CardDefaults.cardColors(
+//            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = Color.White
+
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 10.dp
+        ),
+        shape = MaterialTheme.shapes.medium
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(12.dp)
         ) {
-            // Branch Image
+            //  Image
             AsyncImage(
                 model = branch.imageUri,
                 contentDescription = "Branch Image",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
+                    .size(80.dp),
                 contentScale = ContentScale.Crop
             )
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.width(12.dp))
             
-            // Branch Name + Type
-            Text(
-                text = branch.name,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-            
-            Text(
-                text = branch.type.displayName,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary
-            )
-            
-            Spacer(modifier = Modifier.height(12.dp))
-            
-            // Branch Details
-            BranchDetailRow(
-                label = "Address",
-                value = branch.address
-            )
-            BranchDetailRow(
-                label = "Phone",
-                value = branch.phone
-            )
-            BranchDetailRow(
-                label = "Hours",
-                value = branch.hours
-            )
+            // Inof In the Branch
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                //  Name
+                Text(
+                    text = branch.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                
+                //  Type
+                Text(
+                    text = branch.type.displayName,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                
+                Spacer(modifier = Modifier.height(4.dp))
+                
+                // Address
+                Text(
+                    text = branch.address,
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1
+                )
+            }
         }
     }
 }
